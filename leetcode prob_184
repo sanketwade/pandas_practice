@@ -1,0 +1,23 @@
+import pandas as pd
+def department_highest_salary(employee: pd.DataFrame, department: pd.DataFrame) -> pd.DataFrame:
+    #create new col max salary for each department 
+    employee['max_salary'] = employee.groupby('departmentId')['salary'].transform('max')
+    #department wise highest salary
+    employee = employee[employee['salary'] == employee['max_salary']]
+
+    # left join employee with department
+    employee = employee.merge(department,
+                                how = 'left',
+                                left_on = 'departmentId',
+                                right_on = 'id')
+    
+    #renmae the colomn names 
+    employee = employee.rename(columns ={ 'name_x': 'Employee',
+                                'name_y':'Department',
+                                'salary':'Salary'})
+    
+    return employee[['Department', 'Employee', 'Salary']]
+
+
+
+    
